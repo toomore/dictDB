@@ -16,7 +16,7 @@ def getdatetime(t):
 
 class dictdata(object):
     ''' 資料庫存取基本功能 '''
-    def __init__(self, unikey=0, fname='./test.txt'):
+    def __init__(self, unikey=0, fname='./test.json'):
         ''' 確認檔案是否存在，否則建立一個內容為 {} 的檔案
             :no: 資料代碼
             :fname: 檔案位置
