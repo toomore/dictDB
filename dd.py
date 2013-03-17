@@ -16,18 +16,22 @@ def getdatetime(t):
 
 class dictdata(object):
     ''' 資料庫存取基本功能 '''
-    def __init__(self, unikey=0, fname='./test.json'):
+    def __init__(self, unikey=0, fname='test.json', backupdirname='backup'):
         ''' 確認檔案是否存在，否則建立一個內容為 {} 的檔案
             :no: 資料代碼
             :fname: 檔案位置
         '''
-        self.files = fname
+        self.fname = fname
+        self.dirname = os.path.dirname(os.path.abspath(__file__))
+        self.files = os.path.join(self.dirname, fname)
+        self.backupfilepath = os.path.join(self.dirname, backupdirname)
         try:
             with open(self.files) as f: pass
         except:
             file(self.files,'w+').write(json.dumps({}))
+        if not os.path.exists(self.backupfilepath):
+            os.makedirs(self.backupfilepath)
         self.data = json.loads(file(self.files, 'r+').read())
-        #self.unikey = getunitime() if unikey == 0 else unikey
 
     def save(self):
         ''' 將目前的資料寫入檔案 '''
@@ -36,9 +40,12 @@ class dictdata(object):
 
     def backup(self):
         ''' 備份檔案 '''
-        os.makedirs('./backup') if not os.path.exists('./backup') else None
         d = datetime.strftime(datetime.utcnow(),'%Y%m%d%H%M%S_%f')
-        file('./backup/{0}.{1}'.format(self.files, d),'w+').write(json.dumps(self.data))
+        file(
+                os.path.join(
+                    self.backupfilepath,'{0}.{1}'.format(self.fname, d)
+                    ),'w+'
+            ).write(json.dumps(self.data))
 
     def insert(self, i):
         ''' 建立資料
@@ -108,7 +115,7 @@ class dictdata(object):
 class userinfo(dictdata):
     ''' 存取使用者資料庫 '''
     def __init__(self, *arg):
-        dictdata.__init__(self, *arg, fname='./userinfo.json')
+        dictdata.__init__(self, *arg, fname='userinfo.json')
 
 #---------- 範例 -----------#
 def do_adddata():
