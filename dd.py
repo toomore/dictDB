@@ -1,5 +1,5 @@
-#!/usr/bin/env python
 # -*- coding:utf8 -*-
+''' Python dict database '''
 import json
 import os
 from datetime import datetime
@@ -7,16 +7,16 @@ from time import mktime
 
 def getunitime():
     ''' 取得一個微時間值 '''
-    t = datetime.utcnow()
-    return '{0}{1:06}'.format(int(mktime(t.timetuple())), t.microsecond)
+    now = datetime.utcnow()
+    return '{0}{1:06}'.format(int(mktime(now.timetuple())), now.microsecond)
 
-def getdatetime(t):
+def getdatetime(timestamp):
     ''' 將 _id 轉回時間值 '''
-    return datetime.fromtimestamp(int(t)/1000000.0)
+    return datetime.fromtimestamp(int(timestamp)/1000000.0)
 
-class dictdata(object):
+class DictData(object):
     ''' 資料庫存取基本功能 '''
-    def __init__(self, unikey=0, fname='test.json', backupdirname='backup'):
+    def __init__(self, fname='test.json', backupdirname='backup'):
         ''' 確認檔案是否存在，否則建立一個內容為 {} 的檔案
             :no: 資料代碼
             :fname: 檔案位置
@@ -25,12 +25,14 @@ class dictdata(object):
         self.dirname = os.path.dirname(os.path.abspath(__file__))
         self.files = os.path.join(self.dirname, fname)
         self.backupfilepath = os.path.join(self.dirname, backupdirname)
-        try:
-            with open(self.files) as f: pass
-        except:
-            file(self.files,'w+').write(json.dumps({}))
+
+        if not os.path.exists(self.files):
+            with file(self.files, 'w+') as file_data:
+                file_data.write(json.dumps({}))
+
         if not os.path.exists(self.backupfilepath):
             os.makedirs(self.backupfilepath)
+
         self.data = json.loads(file(self.files, 'r+').read())
 
     def save(self):
@@ -40,10 +42,10 @@ class dictdata(object):
 
     def backup(self):
         ''' 備份檔案 '''
-        d = datetime.strftime(datetime.utcnow(),'%Y%m%d%H%M%S_%f')
+        file_name = datetime.strftime(datetime.utcnow(),'%Y%m%d%H%M%S_%f')
         file(
                 os.path.join(
-                    self.backupfilepath,'{0}.{1}'.format(self.fname, d)
+                    self.backupfilepath,'{0}.{1}'.format(self.fname, file_name)
                     ),'w+'
             ).write(json.dumps(self.data))
 
@@ -67,25 +69,25 @@ class dictdata(object):
         assert isinstance(i, dict)
         assert isinstance(toupdate, dict)
         if more:
-            for d in self.find(i):
-                self.data[d.get('_id')].update(toupdate)
+            for data in self.find(i):
+                self.data[data.get('_id')].update(toupdate)
         else:
             getdata = self.find_one(i)
             self.data[getdata.get('_id')].update(toupdate)
         self.save()
 
-    def find(self, tofind={}, reverse=True, style="AND"):
+    def find(self, tofind=None, reverse=True, style="AND"):
         ''' 尋找資料
             :tofind: 欲尋找的資料
         '''
         assert isinstance(tofind, dict)
-        def indict(a,b):
+        def all_in_dict(tofind, data):
             ''' 嚴格符合 '''
-            return all([0 if i not in b else 1 if a.get(i) == b.get(i) else 0 for i in a])
-        def ORindict(a,b):
+            return all([0 if i not in data else 1 if tofind.get(i) == data.get(i) else 0 for i in tofind])
+        def or_in_dict(tofind, data):
             ''' 模糊符合 '''
-            return any([0 if i not in b else 1 if a.get(i) in b.get(i) else 0 for i in a])
-        ckstyle = indict if style == "AND" else ORindict
+            return any([0 if i not in data else 1 if tofind.get(i) in data.get(i) else 0 for i in tofind])
+        ckstyle = all_in_dict if style == "AND" else or_in_dict
         for i in sorted(self.data, reverse=reverse):
             if ckstyle(tofind, self.data.get(i)):
                 yield self.data.get(i)
@@ -106,63 +108,63 @@ class dictdata(object):
         ''' 刪除資料
             :todel: 欲刪除的資料
         '''
-        assert isinstance(todel ,dict)
+        assert isinstance(todel, dict)
         for i in [ i.get('_id') for i in self.find(todel)]:
             del self.data[i]
         self.save()
 
 #---------- 自訂模組 -----------#
-class userinfo(dictdata):
+class Userinfo(DictData):
     ''' 存取使用者資料庫 '''
     def __init__(self, *arg):
-        dictdata.__init__(self, *arg, fname='userinfo.json')
+        DictData.__init__(self, *arg, fname='userinfo.json')
 
 #---------- 範例 -----------#
 def do_adddata():
     ''' 範例 新增資料 '''
-    d = {'name': 'eromoot', 'age': 28, 'info': u'中文…'}
-    a = dictdata().insert(d) #新增一筆資料
-    print a
-    d = {'name': 'toomore', 'age': 28}
-    a = dictdata().insert(d) #新增一筆資料
-    print a
+    data = {'name': 'eromoot', 'age': 28, 'info': u'中文…'}
+    result = DictData().insert(data) #新增一筆資料
+    print result
+    data = {'name': 'toomore', 'age': 28}
+    result = DictData().insert(data) #新增一筆資料
+    print result
 
 def do_find():
     ''' 範例 取所有資料 '''
-    print list(dictdata().find())
+    print list(DictData().find())
 
 def do_find_something():
     ''' 範例 取所有資料 '''
-    print list(dictdata().find({'name':'toomore'}))
+    print list(DictData().find({'name':'toomore'}))
 
 def do_find_one():
     ''' 範例 取資料 '''
-    print dictdata().find_one({'name':'toomore'})
+    print DictData().find_one({'name':'toomore'})
 
 def do_update():
     ''' 範例 修改資料  '''
-    d = {'name': 'toomore2','age': 18} #原資料
-    getinsert = dictdata().insert(d) #新增資料
+    data = {'name': 'toomore2', 'age': 18} #原資料
+    getinsert = DictData().insert(data) #新增資料
     print getinsert #印出新增資料
-    d = {'name': 'toomore_update','age':28,'loc':'kaohsiung'} #欲修改資料內容
-    dictdata().update(getinsert, d) #修改資料
-    print dictdata().find_one({'_id': getinsert.get('_id')}) #印出修改後的資料
+    data = {'name': 'toomore_update', 'age':28, 'loc':'kaohsiung'} #欲修改資料內容
+    DictData().update(getinsert, data) #修改資料
+    print DictData().find_one({'_id': getinsert.get('_id')}) #印出修改後的資料
 
 def do_del():
     ''' 範例 刪除資料 '''
-    u = {'name': 'toomore_del','age': 18}
-    getinsert = dictdata().insert(u) #將新增資料
-    print dictdata().find_one({'_id': getinsert.get('_id')}) #印出資料
-    dictdata().remove({'_id': getinsert.get('_id')}) #刪除資料
-    print dictdata().find_one({'_id': getinsert.get('_id')}) #印出剛刪除的資料 None
-    print list(dictdata().find()) #印出所有資料
+    data = {'name': 'toomore_del', 'age': 18}
+    getinsert = DictData().insert(data) #將新增資料
+    print DictData().find_one({'_id': getinsert.get('_id')}) #印出資料
+    DictData().remove({'_id': getinsert.get('_id')}) #刪除資料
+    print DictData().find_one({'_id': getinsert.get('_id')}) #印出剛刪除的資料 None
+    print list(DictData().find()) #印出所有資料
 
 def do_getdatetime():
     ''' 範例 轉換 _id 為時間值 '''
-    d = {'name': 'eromoot', 'age': 28, 'info': u'中文…'}
-    a = dictdata().insert(d) #新增一筆資料
-    print a
-    print getdatetime(a.get('_id'))
+    data = {'name': 'eromoot', 'age': 28, 'info': u'中文…'}
+    result = DictData().insert(data) #新增一筆資料
+    print result
+    print getdatetime(result.get('_id'))
 
 #---------- 執行範例 -----------#
 if __name__ == '__main__':
