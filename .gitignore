@@ -1,5 +1,6 @@
-venv
-*.pyc
-*.swp
 *.json
+*.pyc
+*.pylint
+*.swp
 /backup
+venv
