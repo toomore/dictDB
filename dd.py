@@ -1,9 +1,9 @@
 # -*- coding:utf8 -*-
 ''' Python dict database '''
-import json
-import os
 from datetime import datetime
 from time import mktime
+import json
+import os
 
 def getunitime():
     ''' 取得一個微時間值 '''
@@ -80,7 +80,11 @@ class DictData(object):
         ''' 尋找資料
             :tofind: 欲尋找的資料
         '''
-        assert isinstance(tofind, dict)
+        if tofind:
+            assert isinstance(tofind, dict)
+        else:
+            tofind = {}
+
         def all_in_dict(tofind, data):
             ''' 嚴格符合 '''
             return all([0 if i not in data else 1 if tofind.get(i) == data.get(i) else 0 for i in tofind])
