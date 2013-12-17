@@ -120,8 +120,8 @@ class DictData(object):
 #---------- 自訂模組 -----------#
 class Userinfo(DictData):
     ''' 存取使用者資料庫 '''
-    def __init__(self, *arg):
-        DictData.__init__(self, *arg, fname='userinfo.json')
+    def __init__(self, *args, **kwargs):
+        super(Userinfo, self).__init__(fname='userinfo.json', *args, **kwargs)
 
 #---------- 範例 -----------#
 def do_adddata():
