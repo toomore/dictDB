@@ -4,6 +4,7 @@ from datetime import datetime
 from time import mktime
 import json
 import os
+import zlib
 
 def getunitime():
     ''' 取得一個微時間值 '''
@@ -28,17 +29,19 @@ class DictData(object):
 
         if not os.path.exists(self.files):
             with file(self.files, 'w+') as file_data:
-                file_data.write(json.dumps({}))
+                file_data.write(zlib.compress(json.dumps({}), 9))
 
         if not os.path.exists(self.backupfilepath):
             os.makedirs(self.backupfilepath)
 
-        self.data = json.loads(file(self.files, 'r+').read())
+        with file(self.files, 'r+') as files:
+            self.data = json.loads(zlib.decompress(files.read()))
 
     def save(self):
         ''' 將目前的資料寫入檔案 '''
-        file(self.files,'w+').write(json.dumps(self.data))
-        self.backup()
+        with file(self.files,'w+') as files:
+            files.write(zlib.compress(json.dumps(self.data), 9))
+            self.backup()
 
     def backup(self):
         ''' 備份檔案 '''
@@ -47,7 +50,7 @@ class DictData(object):
                 os.path.join(
                     self.backupfilepath,'{0}.{1}'.format(self.fname, file_name)
                     ),'w+'
-            ).write(json.dumps(self.data))
+            ).write(zlib.compress(json.dumps(self.data)))
 
     def insert(self, i):
         ''' 建立資料
