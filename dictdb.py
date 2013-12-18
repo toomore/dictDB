@@ -15,7 +15,7 @@ def getdatetime(timestamp):
     ''' 將 _id 轉回時間值 '''
     return datetime.fromtimestamp(int(timestamp)/1000000.0)
 
-class DictData(object):
+class DictDB(object):
     ''' 資料庫存取基本功能 '''
     def __init__(self, fname='test.json', backupdirname='backup'):
         ''' 確認檔案是否存在，否則建立一個內容為 {} 的檔案
@@ -118,7 +118,7 @@ class DictData(object):
         self.save()
 
 #---------- 自訂模組 -----------#
-class Userinfo(DictData):
+class Userinfo(DictDB):
     ''' 存取使用者資料庫 '''
     def __init__(self, *args, **kwargs):
         super(Userinfo, self).__init__(fname='userinfo.json', *args, **kwargs)
@@ -127,46 +127,46 @@ class Userinfo(DictData):
 def do_adddata():
     ''' 範例 新增資料 '''
     data = {'name': 'eromoot', 'age': 28, 'info': u'中文…'}
-    result = DictData().insert(data) #新增一筆資料
+    result = DictDB().insert(data) #新增一筆資料
     print result
     data = {'name': 'toomore', 'age': 28}
-    result = DictData().insert(data) #新增一筆資料
+    result = DictDB().insert(data) #新增一筆資料
     print result
 
 def do_find():
     ''' 範例 取所有資料 '''
-    print list(DictData().find())
+    print list(DictDB().find())
 
 def do_find_something():
     ''' 範例 取所有資料 '''
-    print list(DictData().find({'name':'toomore'}))
+    print list(DictDB().find({'name':'toomore'}))
 
 def do_find_one():
     ''' 範例 取資料 '''
-    print DictData().find_one({'name':'toomore'})
+    print DictDB().find_one({'name':'toomore'})
 
 def do_update():
     ''' 範例 修改資料  '''
     data = {'name': 'toomore2', 'age': 18} #原資料
-    getinsert = DictData().insert(data) #新增資料
+    getinsert = DictDB().insert(data) #新增資料
     print getinsert #印出新增資料
     data = {'name': 'toomore_update', 'age':28, 'loc':'kaohsiung'} #欲修改資料內容
-    DictData().update(getinsert, data) #修改資料
-    print DictData().find_one({'_id': getinsert.get('_id')}) #印出修改後的資料
+    DictDB().update(getinsert, data) #修改資料
+    print DictDB().find_one({'_id': getinsert.get('_id')}) #印出修改後的資料
 
 def do_del():
     ''' 範例 刪除資料 '''
     data = {'name': 'toomore_del', 'age': 18}
-    getinsert = DictData().insert(data) #將新增資料
-    print DictData().find_one({'_id': getinsert.get('_id')}) #印出資料
-    DictData().remove({'_id': getinsert.get('_id')}) #刪除資料
-    print DictData().find_one({'_id': getinsert.get('_id')}) #印出剛刪除的資料 None
-    print list(DictData().find()) #印出所有資料
+    getinsert = DictDB().insert(data) #將新增資料
+    print DictDB().find_one({'_id': getinsert.get('_id')}) #印出資料
+    DictDB().remove({'_id': getinsert.get('_id')}) #刪除資料
+    print DictDB().find_one({'_id': getinsert.get('_id')}) #印出剛刪除的資料 None
+    print list(DictDB().find()) #印出所有資料
 
 def do_getdatetime():
     ''' 範例 轉換 _id 為時間值 '''
     data = {'name': 'eromoot', 'age': 28, 'info': u'中文…'}
-    result = DictData().insert(data) #新增一筆資料
+    result = DictDB().insert(data) #新增一筆資料
     print result
     print getdatetime(result.get('_id'))
 
