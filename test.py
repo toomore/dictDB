@@ -1,7 +1,6 @@
 # -*- coding:utf8 -*-
 ''' unittest '''
 from dictdb import DictDB
-from dictdb import getdatetime
 import unittest
 
 class Testdd(unittest.TestCase):
@@ -58,7 +57,7 @@ class Testdd(unittest.TestCase):
         data = {'name': 'eromoot', 'age': 28, 'info': u'中文…'}
         result = DictDB().insert(data) #新增一筆資料
         print result
-        print getdatetime(result.get('_id'))
+        print DictDB.getdatetime(result.get('_id'))
 
 if __name__ == "__main__":
     unittest.main()
