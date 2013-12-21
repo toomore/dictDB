@@ -120,12 +120,6 @@ class DictDB(object):
             del self.data[i]
         self.save()
 
-#---------- 自訂模組 -----------#
-class Userinfo(DictDB):
-    ''' 存取使用者資料庫 '''
-    def __init__(self, *args, **kwargs):
-        super(Userinfo, self).__init__(fname='userinfo.json', *args, **kwargs)
-
 #---------- 執行範例 -----------#
 if __name__ == '__main__':
     #---------- 範例 -----------#
