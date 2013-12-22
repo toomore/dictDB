@@ -13,7 +13,7 @@ class Testdd(unittest.TestCase):
             DictDB().remove(i)
 
     def test_adddata(self):
-        ''' 範例 新增資料 '''
+        ''' 測試 新增資料 '''
         print '{0:-^30}'.format('do_adddata')
         data = {'name': 'eromoot', 'age': 28, 'info': u'中文…'}
         result = DictDB().insert(data) #新增一筆資料
@@ -25,7 +25,7 @@ class Testdd(unittest.TestCase):
         assert data == result
 
     def test_find(self):
-        ''' 範例 取所有資料 '''
+        ''' 測試 取所有資料 '''
         print '{0:-^30}'.format('do_find')
         data = {'name': 'eromoot', 'age': 28, 'info': u'中文…'}
         DictDB().insert(data) #新增一筆資料
@@ -34,7 +34,7 @@ class Testdd(unittest.TestCase):
         assert len(list(result)) == 1
 
     def test_find_something(self):
-        ''' 範例 取所有資料 '''
+        ''' 測試 取所有資料 '''
         data = {'name': 'toomore', 'age': 28}
         DictDB().insert(data) #新增一筆資料
         print '{0:-^30}'.format('do_find_something')
@@ -43,7 +43,7 @@ class Testdd(unittest.TestCase):
         assert len(result) == 1
 
     def test_find_one(self):
-        ''' 範例 取資料 '''
+        '''測試 取資料 '''
         data = {'name': 'toomore', 'age': 28}
         DictDB().insert(data) #新增一筆資料
         print '{0:-^30}'.format('do_find_one')
@@ -52,7 +52,7 @@ class Testdd(unittest.TestCase):
         assert result == data
 
     def test_update(self):
-        ''' 範例 修改資料  '''
+        ''' 測試 修改資料  '''
         print '{0:-^30}'.format('do_update')
         data = {'name': 'toomore2', 'age': 18} #原資料
         getinsert = DictDB().insert(data) #新增資料
@@ -63,7 +63,7 @@ class Testdd(unittest.TestCase):
         assert result['age'] == data['age']
 
     def test_del(self):
-        ''' 範例 刪除資料 '''
+        ''' 測試 刪除資料 '''
         print '{0:-^30}'.format('do_del')
         data = {'name': 'toomore_del', 'age': 18}
         getinsert = DictDB().insert(data) #將新增資料
@@ -73,12 +73,22 @@ class Testdd(unittest.TestCase):
         assert result is None
 
     def test_getdatetime(self):
-        ''' 範例 轉換 _id 為時間值 '''
+        ''' 測試 轉換 _id 為時間值 '''
         print '{0:-^30}'.format('do_getdatetime')
         data = {'name': 'eromoot', 'age': 28, 'info': u'中文…'}
         result = DictDB().insert(data) #新增一筆資料
         print result
         print DictDB.getdatetime(result.get('_id'))
+
+    def test_clean(self):
+        ''' 測試 清空資料 '''
+        data = DictDB()
+        data.insert({'name': 'toomore'})
+        data.clean()
+        assert len(list(data.find())) == 1
+        data.clean(confirm=True)
+        assert len(list(data.find())) == 0
+
 
 if __name__ == "__main__":
     unittest.main()
