@@ -121,6 +121,12 @@ class DictDB(object):
             del self.data[i]
         self.save()
 
+    def clean(self, confirm=False):
+        ''' 清空資料 '''
+        if confirm:
+            self.data = {}
+            self.save()
+
 #---------- 執行範例 -----------#
 if __name__ == '__main__':
     #---------- 範例 -----------#
