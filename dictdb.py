@@ -29,6 +29,9 @@ class DictDB(object):
         with file(self.files, 'r+') as files:
             self.data = json.loads(zlib.decompress(files.read()))
 
+    def __repr__(self):
+        return "<DictDB '%s' Count:%s>" % (self.fname, len(self.data))
+
     @staticmethod
     def getunitime():
         ''' 取得一個微時間值 '''
