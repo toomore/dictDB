@@ -49,7 +49,8 @@ class DictDB(object):
     def backup(self):
         ''' 備份檔案 '''
         file_name = datetime.strftime(datetime.utcnow(),'%Y%m%d%H%M%S_%f')
-        with file(os.path.join(self.backupfilepath, '%s.%s' % (self.fname, file_name)), 'w+') as files:
+        with file(os.path.join(self.backupfilepath, '%s.%s' % \
+                                       (self.fname, file_name)), 'w+') as files:
             files.write(zlib.compress(json.dumps(self.data), 9))
 
     def insert(self, i):
