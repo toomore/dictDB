@@ -30,7 +30,8 @@ class DictDB(object):
             self.data = json.loads(zlib.decompress(files.read()))
 
     def __repr__(self):
-        return "<DictDB '%s' Count:%s>" % (self.fname, len(self.data))
+        return "<DictDB '%s' Count:%s Size:%sB>" % (self.fname, len(self.data),
+                                                   os.path.getsize(self.files))
 
     @staticmethod
     def getunitime():
