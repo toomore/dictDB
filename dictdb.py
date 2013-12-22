@@ -29,8 +29,8 @@ class DictDB(object):
         with file(self.files, 'r+') as files:
             self.data = json.loads(zlib.decompress(files.read()))
 
-    @classmethod
-    def getunitime(cls):
+    @staticmethod
+    def getunitime():
         ''' 取得一個微時間值 '''
         now = datetime.utcnow()
         return '{0}{1:06}'.format(int(mktime(now.timetuple())), now.microsecond)
