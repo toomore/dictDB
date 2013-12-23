@@ -2,8 +2,8 @@
 ''' Python dict database '''
 from datetime import datetime
 from time import mktime
-import json
 import os
+import ujson as json
 import zlib
 
 
