@@ -19,6 +19,7 @@ setup(name='DictDB',
       #include_package_data=True,
       license='MIT',
       keywords="dict schema-free database",
+      install_requires=['ujson'],
       classifiers=[
           'Development Status :: 2 - Pre-Alpha',
           'Environment :: Console',
