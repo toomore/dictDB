@@ -1,0 +1,5 @@
+dictdb
+=========
+
+.. automodule:: dictdb
+   :members:
