@@ -1,18 +1,21 @@
 # -*- coding:utf8 -*-
 ''' Python dict database '''
-from datetime import datetime
-from time import mktime
 import os
 import ujson as json
 import zlib
+from datetime import datetime
+from time import mktime
 
 
 class DictDB(object):
-    ''' 資料庫存取基本功能 '''
+    ''' 資料庫存取基本功能
+
+        :param path fname: 檔案位置
+        :param str backupdirname: 備份檔案資料夾名稱
+    '''
+
     def __init__(self, fname='test.json', backupdirname='backup'):
         ''' 確認檔案是否存在，否則建立一個內容為 {} 的檔案
-            :no: 資料代碼
-            :fname: 檔案位置
         '''
         self.fname = fname
         self.dirname = os.path.dirname(os.path.abspath(__file__))
@@ -35,13 +38,21 @@ class DictDB(object):
 
     @staticmethod
     def getunitime():
-        ''' 取得一個微時間值 '''
+        ''' 取得一個微時間值
+
+            :rtype: str
+            :returns: timestamp
+        '''
         now = datetime.utcnow()
         return '{0}{1:06}'.format(int(mktime(now.timetuple())), now.microsecond)
 
     @staticmethod
     def getdatetime(timestamp):
-        ''' 將 _id 轉回時間值 '''
+        ''' 將 _id 轉回時間值
+
+            :param str timestamp: timestamp
+            :rtype: :mod:`datetime`
+        '''
         return datetime.fromtimestamp(int(timestamp)/1000000.0)
 
     def save(self):
@@ -59,7 +70,10 @@ class DictDB(object):
 
     def insert(self, i):
         ''' 建立資料
-            :i: 該筆相符資料
+
+            :param dict i: 該筆相符資料
+            :rtype: dict
+            :returns: 建立完成的資料，包含 :py:attr:`_id`
         '''
         assert isinstance(i, dict)
         unikey = self.getunitime()
@@ -70,9 +84,10 @@ class DictDB(object):
 
     def update(self, i, toupdate, more=0):
         ''' 更新資料
-            :i: 該筆相符資料
-            :toupdate: 欲新增的資料
-            :more: 更新所有相符的資料，預設為一筆
+
+            :param dict i: 該筆相符資料
+            :param dict toupdate: 欲新增的資料
+            :param int more: 更新所有相符的資料，預設為一筆
         '''
         assert isinstance(i, dict)
         assert isinstance(toupdate, dict)
@@ -86,7 +101,12 @@ class DictDB(object):
 
     def find(self, tofind=None, reverse=True, style="AND"):
         ''' 尋找資料
-            :tofind: 欲尋找的資料
+
+            :param dict tofind: 欲尋找的資料
+            :param bool reverse: 排序，新→舊
+            :param str style: `AND` 或 `OR`
+            :rtype: list
+            :returns: A list of dict data.
         '''
         if tofind:
             assert isinstance(tofind, dict)
@@ -106,7 +126,9 @@ class DictDB(object):
 
     def find_one(self, tofind):
         ''' 尋找資料，無資料回傳 None
-            :tofind: 欲尋找的資料
+
+            :param dict tofind: 欲尋找的資料
+            :rtype: dict or None
         '''
         assert isinstance(tofind, dict)
         getfind = [i.get('_id') for i in list(self.find(tofind))]
@@ -118,7 +140,8 @@ class DictDB(object):
 
     def remove(self, todel):
         ''' 刪除資料
-            :todel: 欲刪除的資料
+
+            :param dict todel: 欲刪除的資料
         '''
         assert isinstance(todel, dict)
         for i in [ i.get('_id') for i in self.find(todel)]:
@@ -126,7 +149,10 @@ class DictDB(object):
         self.save()
 
     def clean(self, confirm=False):
-        ''' 清空資料 '''
+        ''' 清空資料
+
+            :param bool confirm: double check.
+        '''
         if confirm:
             self.data = {}
             self.save()
