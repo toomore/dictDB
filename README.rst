@@ -6,3 +6,8 @@ dictDB - Python dictionary database
 
 .. image:: https://travis-ci.org/toomore/dictDB.png?branch=master
    :target: https://travis-ci.org/toomore/dictDB
+
+:Authors: Toomore Chiang
+:Version: 0.0.0
+:Docs: `dictDB <http://dictdb-docs.toomore.net/>`_
+:github: `dictDB <https://github.com/toomore/dictDB>`_
