@@ -9,6 +9,6 @@ dictDB - Python dictionary database
 
 :Authors: Toomore Chiang
 :Version: 0.0.0
-:Docs: `dictDB <http://dictdb-docs.toomore.net/>`_
-:github: `dictDB <https://github.com/toomore/dictDB>`_
-:PyPI: `dictDB <https://pypi.python.org/pypi/DictDB>`_
+:Docs: `dictDB Docs <http://dictdb-docs.toomore.net/>`_
+:github: `dictDB github <https://github.com/toomore/dictDB>`_
+:PyPI: `dictDB PyPI <https://pypi.python.org/pypi/DictDB>`_

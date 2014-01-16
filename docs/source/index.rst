@@ -11,8 +11,8 @@ Welcome to dictDB's documentation!
 
 :Authors: Toomore Chiang
 :Version: |release|
-:PyPI: `dictDB <https://pypi.python.org/pypi/DictDB>`_
-:github: `dictDB <https://github.com/toomore/dictDB>`_
+:PyPI: `dictDB PyPI: <https://pypi.python.org/pypi/DictDB>`_
+:github: `dictDB github <https://github.com/toomore/dictDB>`_
 
 A schema free database by useing python `dict`.
 
