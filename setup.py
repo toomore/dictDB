@@ -3,8 +3,7 @@
 
 from setuptools import setup, find_packages
 
-#long_description = open('./README.rest', 'r').read()
-long_description = 'A schema free database by useing python dict'
+long_description = open('./README.rst', 'r').read()
 description = 'A scheem free database by useing python dict'
 
 setup(name='DictDB',
