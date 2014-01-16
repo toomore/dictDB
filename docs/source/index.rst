@@ -6,12 +6,22 @@
 Welcome to dictDB's documentation!
 ==================================
 
-Contents:
-
 .. toctree::
    :maxdepth: 2
 
+:Authors: Toomore Chiang
+:Version: |release|
+:PyPI: `dictDB <https://pypi.python.org/pypi/DictDB>`_
+:github: `dictDB <https://github.com/toomore/dictDB>`_
 
+A schema free database by useing python `dict`.
+
+.. seealso:: :doc:`dictdb`
+
+unittest
+--------
+
+.. literalinclude:: ../../test.py
 
 Indices and tables
 ==================
