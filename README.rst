@@ -11,3 +11,4 @@ dictDB - Python dictionary database
 :Version: 0.0.0
 :Docs: `dictDB <http://dictdb-docs.toomore.net/>`_
 :github: `dictDB <https://github.com/toomore/dictDB>`_
+:PyPI: `dictDB <https://pypi.python.org/pypi/DictDB>`_
